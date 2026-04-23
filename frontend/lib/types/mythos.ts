@@ -3,6 +3,27 @@ import type { LucideIcon } from "lucide-react";
 export type TagTone = "green" | "blue" | "violet" | "amber";
 export type StatTone = "green" | "blue" | "violet" | "amber" | "red";
 export type RelationshipDisposition = "ally" | "neutral" | "wary";
+export type NavItemKey =
+  | "campaigns"
+  | "world"
+  | "characters"
+  | "locations"
+  | "factions"
+  | "quests"
+  | "events"
+  | "inventory"
+  | "timeline"
+  | "settings";
+export type QuickActionKey =
+  | "attack"
+  | "persuade"
+  | "investigate"
+  | "search"
+  | "more-actions";
+export type WorldOverviewStatKey =
+  | "faction-reputation"
+  | "world-tension"
+  | "session-turn";
 
 export interface Campaign {
   id: string;
@@ -147,18 +168,21 @@ export interface RelationshipEdge {
 }
 
 
-export interface NavItem {
+export interface NavItemUI {
+  key: NavItemKey;
   label: string;
   icon: LucideIcon;
   active?: boolean;
 }
 
-export interface QuickAction {
+export interface QuickActionUI {
+  key: QuickActionKey;
   label: string;
   icon: LucideIcon;
 }
 
-export interface WorldOverviewStat {
+export interface WorldOverviewStatUI {
+  key: WorldOverviewStatKey;
   icon: LucideIcon;
   label: string;
   value: string;

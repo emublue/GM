@@ -1,12 +1,12 @@
 import Image from "next/image";
 import { SendHorizontal, Sparkles } from "lucide-react";
-import type { ChatMessage, QuickAction } from "@/lib/types/mythos";
+import type { ChatMessage, QuickActionUI } from "@/lib/types/mythos";
 import chatBackdrop from "../img/florian-elie-shot01-scaled.jpg";
 import { DividerLabel, MessageCard, Panel } from "../layout/mythos-primitives";
 
 type MythosChatPanelProps = {
   messages: ChatMessage[];
-  quickActions: QuickAction[];
+  quickActions: QuickActionUI[];
 };
 
 export function MythosChatPanel({ messages, quickActions }: MythosChatPanelProps) {

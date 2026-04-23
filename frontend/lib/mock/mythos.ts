@@ -1,22 +1,4 @@
-import {
-  BookOpen,
-  CalendarDays,
-  Clock3,
-  Compass,
-  Flame,
-  Globe,
-  Hourglass,
-  MapPin,
-  MessageCircle,
-  MoreHorizontal,
-  Package,
-  ScrollText,
-  Search,
-  Settings,
-  Shield,
-  Sword,
-  User,
-} from "lucide-react";
+import type { SessionScreenResponse } from "../types/api";
 import type {
   ActiveQuest,
   Campaign,
@@ -24,13 +6,10 @@ import type {
   DateDisplay,
   MythosCharacter,
   MythosLocation,
-  NavItem,
   Npc,
   PlayerProfile,
-  QuickAction,
   RelationshipNode,
   WorldEvent,
-  WorldOverviewStat,
 } from "../types/mythos";
 
 export const campaign: Campaign = {
@@ -224,47 +203,68 @@ export const relationships: RelationshipNode[] = [
   { id: "iron-concord", name: "Iron Concord", subtitle: "Wary", disposition: "wary" },
 ];
 
-export const navItems: NavItem[] = [
-  { label: "Campaigns", icon: BookOpen, active: true },
-  { label: "World", icon: Globe },
-  { label: "Characters", icon: User },
-  { label: "Locations", icon: MapPin },
-  { label: "Factions", icon: Shield },
-  { label: "Quests", icon: ScrollText },
-  { label: "Events", icon: CalendarDays },
-  { label: "Inventory", icon: Package },
-  { label: "Timeline", icon: Hourglass },
-  { label: "Settings", icon: Settings },
-];
-
-export const quickActions: QuickAction[] = [
-  { label: "Attack", icon: Sword },
-  { label: "Persuade", icon: MessageCircle },
-  { label: "Investigate", icon: Search },
-  { label: "Search", icon: Compass },
-  { label: "More Actions", icon: MoreHorizontal },
-];
-
-export const worldOverviewStats: WorldOverviewStat[] = [
-  {
-    icon: Shield,
-    label: "Faction Reputation",
-    value: "87",
-    sublabel: "Honored",
-    tone: "green",
+export const mockSessionScreenResponse: SessionScreenResponse = {
+  topbar: {
+    campaign,
+    playerProfile: player,
+    dateDisplay: currentDate,
   },
-  {
-    icon: Flame,
-    label: "World Tension",
-    value: "64%",
-    sublabel: "High",
-    tone: "amber",
+  sidebar: {
+    navItems: [
+      { key: "campaigns", label: "Campaigns", active: true },
+      { key: "world", label: "World" },
+      { key: "characters", label: "Characters" },
+      { key: "locations", label: "Locations" },
+      { key: "factions", label: "Factions" },
+      { key: "quests", label: "Quests" },
+      { key: "events", label: "Events" },
+      { key: "inventory", label: "Inventory" },
+      { key: "timeline", label: "Timeline" },
+      { key: "settings", label: "Settings" },
+    ],
+    worldOverview: [
+      {
+        key: "faction-reputation",
+        label: "Faction Reputation",
+        value: "87",
+        sublabel: "Honored",
+        tone: "green",
+      },
+      {
+        key: "world-tension",
+        label: "World Tension",
+        value: "64%",
+        sublabel: "High",
+        tone: "amber",
+      },
+      {
+        key: "session-turn",
+        label: "Session Turn",
+        value: "128",
+        sublabel: "/oo",
+        tone: "violet",
+      },
+    ],
   },
-  {
-    icon: Clock3,
-    label: "Session Turn",
-    value: "128",
-    sublabel: "/oo",
-    tone: "violet",
+  chat: {
+    messages,
+    quickActions: [
+      { key: "attack", label: "Attack" },
+      { key: "persuade", label: "Persuade" },
+      { key: "investigate", label: "Investigate" },
+      { key: "search", label: "Search" },
+      { key: "more-actions", label: "More Actions" },
+    ],
   },
-];
+  characterSheet: character,
+  infoPanels: {
+    activeQuest: quest,
+    location,
+    npcInFocus: npc,
+    recentEvents: events,
+    relationships: {
+      nodes: relationships,
+      edges: [],
+    },
+  },
+};

@@ -1,10 +1,10 @@
-import type { NavItem, WorldOverviewStat } from "@/lib/types/mythos";
+import type { NavItemUI, WorldOverviewStatUI } from "@/lib/types/mythos";
 import sidebarBackdrop from "../img/25545.jpg";
 import { OverviewStat, SidebarItem } from "../layout/mythos-primitives";
 
 type MythosSidebarProps = {
-  navItems: NavItem[];
-  worldOverviewStats: WorldOverviewStat[];
+  navItems: NavItemUI[];
+  worldOverviewStats: WorldOverviewStatUI[];
 };
 
 export function MythosSidebar({ navItems, worldOverviewStats }: MythosSidebarProps) {
@@ -30,9 +30,10 @@ export function MythosSidebar({ navItems, worldOverviewStats }: MythosSidebarPro
       </div>
 
       <div className="relative z-10 space-y-2">
-        {navItems.map((item) => (
-          <SidebarItem key={item.label} {...item} />
-        ))}
+        {navItems.map((item) => {
+          const { key, ...sidebarItemProps } = item;
+          return <SidebarItem key={key} {...sidebarItemProps} />;
+        })}
       </div>
 
       <div className="relative z-10 mt-4 overflow-hidden rounded-[24px] border border-amber-300/18 bg-[linear-gradient(180deg,rgba(18,18,24,0.82),rgba(11,11,18,0.9))] p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]">
@@ -41,9 +42,10 @@ export function MythosSidebar({ navItems, worldOverviewStats }: MythosSidebarPro
           . World Overview .
         </div>
         <div className="space-y-3">
-          {worldOverviewStats.map((stat) => (
-            <OverviewStat key={stat.label} {...stat} />
-          ))}
+          {worldOverviewStats.map((stat) => {
+            const { key, ...overviewStatProps } = stat;
+            return <OverviewStat key={key} {...overviewStatProps} />;
+          })}
         </div>
       </div>
     </aside>

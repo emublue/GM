@@ -1,8 +1,14 @@
 import type { LucideIcon } from "lucide-react";
 import { Sparkles } from "lucide-react";
-import type { ChatMessage, NavItem, StatTone, TagTone, WorldOverviewStat } from "@/lib/types/mythos";
+import type {
+  ChatMessage,
+  NavItemUI,
+  StatTone,
+  TagTone,
+  WorldOverviewStatUI,
+} from "@/lib/types/mythos";
 
-type SidebarItemProps = NavItem;
+type SidebarItemProps = NavItemUI;
 
 type PanelProps = {
   title: string;
@@ -131,7 +137,7 @@ export function MessageCard({ message }: MessageCardProps) {
   );
 }
 
-export function OverviewStat({ icon: Icon, label, value, tone, sublabel }: WorldOverviewStat) {
+export function OverviewStat({ icon: Icon, label, value, tone, sublabel }: WorldOverviewStatUI) {
   const toneStyles: Record<StatTone, string> = {
     green: "text-emerald-300",
     blue: "text-sky-300",
