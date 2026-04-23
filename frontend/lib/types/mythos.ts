@@ -130,6 +130,8 @@ export interface ActiveQuest {
   steps: QuestStep[];
 }
 
+export interface StoryQuest extends ActiveQuest {}
+
 export interface MythosLocation {
   id: string;
   name: string;
@@ -143,12 +145,19 @@ export interface Npc {
   title: string;
   disposition: RelationshipDisposition;
   dispositionSegments: number;
+  summary: string;
+  lastNotableInteraction?: string | null;
   tags: CharacterTag[];
 }
 
 export interface WorldEvent {
   id: string;
   time: string;
+  text: string;
+}
+
+export interface JournalEntry {
+  id: string;
   text: string;
 }
 

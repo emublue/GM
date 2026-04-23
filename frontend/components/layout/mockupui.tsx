@@ -1,4 +1,11 @@
+"use client";
+
+import { useState } from "react";
+import { postChatTurn } from "@/lib/api/chat";
+import type { SessionScreenResponse } from "@/lib/types/api";
+import type { ChatMessage } from "@/lib/types/mythos";
 import type { SessionScreenUIModel } from "@/lib/mappers/mythos";
+import { mapSessionScreenResponseToUI } from "@/lib/mappers/mythos";
 import { MythosCharacterSheet } from "../cards/mythos-character-sheet";
 import { MythosInfoPanels } from "../cards/mythos-info-panels";
 import { MythosChatPanel } from "../chat/mythos-chat-panel";
@@ -6,10 +13,56 @@ import { MythosSidebar } from "../sidebar/mythos-sidebar";
 import { MythosTopbar } from "../topbar/mythos-topbar";
 
 type MythosGMUIMockupProps = {
-  screen: SessionScreenUIModel;
+  campaignId: string;
+  screen: SessionScreenResponse;
 };
 
-export default function MythosGMUIMockup({ screen }: MythosGMUIMockupProps) {
+function mergeChatMessages(existing: ChatMessage[], incoming: ChatMessage[]) {
+  const knownIds = new Set(existing.map((message) => message.id));
+  const appendedMessages = incoming.filter((message) => !knownIds.has(message.id));
+  return [...existing, ...appendedMessages];
+}
+
+export default function MythosGMUIMockup({ campaignId, screen: initialScreen }: MythosGMUIMockupProps) {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [screen, setScreen] = useState<SessionScreenUIModel>(() =>
+    mapSessionScreenResponseToUI(initialScreen),
+  );
+
+  function handleChatSubmit({
+    playerInput,
+    selectedAction,
+  }: {
+    playerInput: string;
+    selectedAction?: string;
+  }) {
+    if (isSubmitting) return;
+
+    setIsSubmitting(true);
+
+    void postChatTurn({
+      campaignId,
+      playerInput,
+      selectedAction,
+    })
+      .then((response) => {
+        const nextScreen = mapSessionScreenResponseToUI(response.screen);
+        setScreen((currentScreen) => ({
+          ...nextScreen,
+          chat: {
+            ...nextScreen.chat,
+            messages: mergeChatMessages(currentScreen.chat.messages, nextScreen.chat.messages),
+          },
+        }));
+      })
+      .catch((error) => {
+        console.error("Failed to submit chat turn", error);
+      })
+      .finally(() => {
+        setIsSubmitting(false);
+      });
+  }
+
   return (
     <div className="min-h-screen bg-[#05070d] text-white">
       <div className="relative min-h-screen overflow-hidden bg-[radial-gradient(circle_at_top_left,rgba(88,28,135,0.14),transparent_28%),radial-gradient(circle_at_top_right,rgba(217,119,6,0.08),transparent_24%),linear-gradient(180deg,#06070d_0%,#05070d_100%)]">
@@ -34,6 +87,8 @@ export default function MythosGMUIMockup({ screen }: MythosGMUIMockupProps) {
                   <MythosChatPanel
                     messages={screen.chat.messages}
                     quickActions={screen.chat.quickActions}
+                    isSubmitting={isSubmitting}
+                    onSubmit={handleChatSubmit}
                   />
                 </div>
                 <MythosCharacterSheet character={screen.characterSheet} />
@@ -41,7 +96,7 @@ export default function MythosGMUIMockup({ screen }: MythosGMUIMockupProps) {
 
               <MythosInfoPanels
                 location={screen.infoPanels.location}
-                quest={screen.infoPanels.activeQuest}
+                journal={screen.infoPanels.journal}
                 npc={screen.infoPanels.npcInFocus}
                 events={screen.infoPanels.recentEvents}
                 relationships={screen.infoPanels.relationships.nodes}

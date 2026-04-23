@@ -145,12 +145,29 @@ class NpcSchema(BaseModel):
     title: str
     disposition: RelationshipDisposition
     dispositionSegments: int
+    summary: str
+    lastNotableInteraction: str | None = None
     tags: list[CharacterTagSchema]
+
+
+class NpcMemorySchema(BaseModel):
+    npcId: str
+    name: str
+    title: str
+    currentDisposition: RelationshipDisposition
+    summary: str
+    tags: list[str]
+    lastNotableInteraction: str | None = None
 
 
 class WorldEventSchema(BaseModel):
     id: str
     time: str
+    text: str
+
+
+class JournalEntrySchema(BaseModel):
+    id: str
     text: str
 
 

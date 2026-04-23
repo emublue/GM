@@ -1,6 +1,6 @@
-import { Briefcase, Compass, MapPin, Sparkles, User } from "lucide-react";
+import { BookOpenText, Compass, MapPin, Sparkles, User } from "lucide-react";
 import type {
-  ActiveQuest,
+  JournalEntry,
   MythosLocation,
   Npc,
   RelationshipNode,
@@ -20,8 +20,8 @@ type CurrentLocationPanelProps = {
   location: MythosLocation;
 };
 
-type ActiveQuestPanelProps = {
-  quest: ActiveQuest;
+type JournalPanelProps = {
+  journal: JournalEntry[];
 };
 
 type NpcInFocusPanelProps = {
@@ -30,7 +30,7 @@ type NpcInFocusPanelProps = {
 
 type MythosInfoPanelsProps = {
   location: MythosLocation;
-  quest: ActiveQuest;
+  journal: JournalEntry[];
   npc: Npc;
   events: WorldEvent[];
   relationships: RelationshipNode[];
@@ -159,45 +159,16 @@ export function CurrentLocationPanel({ location }: CurrentLocationPanelProps) {
   );
 }
 
-export function ActiveQuestPanel({ quest }: ActiveQuestPanelProps) {
+export function JournalPanel({ journal }: JournalPanelProps) {
   return (
-    <Panel title="Active Quest" icon={Briefcase}>
-      <div className="flex items-start justify-between gap-4">
-        <div>
-          <div className="font-serif text-[28px] leading-none text-stone-100">{quest.title}</div>
-          <p className="mt-3 text-[14px] leading-6 text-stone-300/82">{quest.description}</p>
-        </div>
-        <div className="rounded-xl border border-amber-300/15 p-2 text-amber-300/80">
-          <Sparkles className="h-4 w-4" />
-        </div>
-      </div>
-
-      <div className="mt-4 flex items-center gap-4">
-        <div className="h-2.5 flex-1 overflow-hidden rounded-full bg-white/[0.06]">
+    <Panel title="Journal" icon={BookOpenText} className="self-start">
+      <div className="space-y-3">
+        {journal.map((entry) => (
           <div
-            className="h-full rounded-full bg-[linear-gradient(90deg,#f4c177,#c084fc)]"
-            style={{ width: `${(quest.currentStepCount / quest.totalStepCount) * 100}%` }}
-          />
-        </div>
-        <div className="text-[15px] text-stone-300/75">
-          {quest.currentStepCount} / {quest.totalStepCount}
-        </div>
-      </div>
-
-      <div className="mt-4 space-y-2.5 text-[14px] text-stone-200/88">
-        {quest.steps.map((step) => (
-          <div key={step.id} className="flex items-center gap-3">
-            <span
-              className={[
-                "flex h-5 w-5 items-center justify-center rounded-full border text-[11px]",
-                step.done
-                  ? "border-emerald-400/30 bg-emerald-400/14 text-emerald-300"
-                  : "border-stone-500/60 text-transparent",
-              ].join(" ")}
-            >
-              x
-            </span>
-            <span className={step.done ? "text-stone-100" : "text-stone-300/82"}>{step.label}</span>
+            key={entry.id}
+            className="rounded-[18px] border border-violet-300/14 bg-violet-500/[0.04] px-4 py-3 text-[14px] leading-6 text-stone-200/86"
+          >
+            {entry.text}
           </div>
         ))}
       </div>
@@ -222,6 +193,7 @@ export function NpcInFocusPanel({ npc }: NpcInFocusPanelProps) {
         <div className="min-w-0 flex-1">
           <div className="font-serif text-[32px] leading-none text-stone-100">{npc.name}</div>
           <div className="mt-1 text-[16px] text-stone-300/78">{npc.title}</div>
+          <p className="mt-3 text-[14px] leading-6 text-stone-300/80">{npc.summary}</p>
           <div className="mt-4 flex items-center gap-3">
             <span className="text-[14px] text-stone-300/78">Disposition</span>
             <div className="flex items-center gap-1.5">
@@ -239,6 +211,13 @@ export function NpcInFocusPanel({ npc }: NpcInFocusPanelProps) {
               </Tag>
             ))}
           </div>
+
+          {npc.lastNotableInteraction ? (
+            <div className="mt-4 rounded-[16px] border border-white/6 bg-white/[0.03] px-3 py-2 text-[13px] leading-5 text-stone-300/78">
+              <span className="text-stone-400/72">Last notable interaction:</span>{" "}
+              {npc.lastNotableInteraction}
+            </div>
+          ) : null}
         </div>
       </div>
     </Panel>
@@ -247,13 +226,13 @@ export function NpcInFocusPanel({ npc }: NpcInFocusPanelProps) {
 
 export function MythosInfoPanels({
   location,
-  quest,
+  journal,
   npc,
   events,
   relationships,
 }: MythosInfoPanelsProps) {
   return (
-    <div className="grid items-start grid-cols-[1.05fr_0.95fr_1.1fr] gap-4">
+    <div className="grid items-start grid-cols-[1.1fr_1fr_1fr] gap-4">
       <div className="space-y-4">
         <RecentWorldEventsPanel events={events} />
         <NpcInFocusPanel npc={npc} />
@@ -263,7 +242,7 @@ export function MythosInfoPanels({
 
       <div className="space-y-4">
         <CurrentLocationPanel location={location} />
-        <ActiveQuestPanel quest={quest} />
+        <JournalPanel journal={journal} />
       </div>
     </div>
   );

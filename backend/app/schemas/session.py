@@ -1,10 +1,10 @@
 from pydantic import BaseModel
 
 from app.schemas.shared import (
-    ActiveQuestSchema,
     CampaignSchema,
     ChatMessageSchema,
     DateDisplaySchema,
+    JournalEntrySchema,
     MythosCharacterSchema,
     MythosLocationSchema,
     NavItemSchema,
@@ -40,8 +40,8 @@ class RelationshipGraphDataSchema(BaseModel):
 
 
 class InfoPanelsDataSchema(BaseModel):
-    activeQuest: ActiveQuestSchema
     location: MythosLocationSchema
+    journal: list[JournalEntrySchema]
     npcInFocus: NpcSchema
     recentEvents: list[WorldEventSchema]
     relationships: RelationshipGraphDataSchema

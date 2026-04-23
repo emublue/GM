@@ -1,9 +1,9 @@
 import type {
-  ActiveQuest,
   Campaign,
   ChatMessage,
   DateDisplay,
   MythosCharacter,
+  JournalEntry,
   MythosLocation,
   NavItemKey,
   Npc,
@@ -57,8 +57,8 @@ export interface RelationshipGraphData {
 }
 
 export interface InfoPanelsData {
-  activeQuest: ActiveQuest;
   location: MythosLocation;
+  journal: JournalEntry[];
   npcInFocus: Npc;
   recentEvents: WorldEvent[];
   relationships: RelationshipGraphData;
